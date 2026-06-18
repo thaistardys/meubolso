@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <title>Finanças Pessoais</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="container-max">
+        <div class="header-nav">
+            <button id="prev-month">&lt;</button>
+            <h1 id="current-month-display">Janeiro 2026</h1>
+            <button id="next-month">&gt;</button>
+        </div>
+        <div class="header-cards">
+            <div class="card card-receita">
+                <span>Receitas</span>
+                <strong id="total-receitas">R$ 0,00</strong>
+            </div>
+            <div class="card card-despesa">
+                <span>Despesas</span>
+                <strong id="total-despesas">R$ 0,00</strong>
+            </div>
+            <div class="card card-saldo">
+                <span>Saldo</span>
+                <strong id="total-saldo">R$ 0,00</strong>
+            </div>
+            <div class="card card-efetivado">
+                <span>Efetivados</span>
+                <strong id="total-efetivados">R$ 0,00</strong>
+            </div>
+            <div class="card card-reserva">
+                <span>Reserva</span>
+                <strong id="total-reserva">R$ 0,00</strong>
+            </div>
+        </div>
+    </header>
+
+    <main class="container-max">
+        <div class="actions">
+            <div class="dropdown">
+                <button id="btn-novo" class="btn-primary">+ Novo</button>
+                <div id="dropdown-menu" class="dropdown-content hidden">
+                    <button id="btn-nova-receita">Nova Receita</button>
+                    <button id="btn-nova-despesa">Nova Despesa</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="chart-section">
+            <h2>Distribuição por Categorias</h2>
+            <div class="chart-container">
+                <div id="category-chart" class="pie-chart"></div>
+                <div id="chart-legend" class="chart-legend"></div>
+            </div>
+        </section>
+
+        <section class="values-section">
+            <div class="list-group">
+                <h2>Receitas</h2>
+                <ul id="list-receitas" class="transaction-list"></ul>
+            </div>
+            <div class="list-group">
+                <h2>Despesas</h2>
+                <ul id="list-despesas" class="transaction-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container-max">
+        <p>Todos os direitos reservados &copy; thaistardys 2026</p>
+    </footer>
+
+    <!-- MODAL PRINCIPAL: FORMULÁRIO DE CADASTRO -->
+    <div id="transaction-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="btn-close-transaction" class="close-modal">&times;</span>
+            <h2 id="modal-title">Nova Transação</h2>
+            <form id="transaction-form">
+                <input type="hidden" id="trans-id">
+                <input type="hidden" id="trans-type">
+
+                <div class="form-group">
+                    <label for="trans-desc">Descrição</label>
+                    <input type="text" id="trans-desc" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trans-value">Valor (R$)</label>
+                    <input type="number" id="trans-value" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trans-date">Data de Vencimento/Recebimento</label>
+                    <input type="date" id="trans-date" required>
+                </div>
+
+                <div id="recurrence-fields" class="hidden">
+                    <div class="form-group">
+                        <label for="trans-recurrence">Recorrência</label>
+                        <select id="trans-recurrence">
+                            <option value="nao-recorrente">Não Recorrente</option>
+                            <option value="parcelado" id="option-parcelado">Parcelar ou repetir</option>
+                            <option value="fixa">Fixa mensal</option>
+                        </select>
+                    </div>
+
+                    <div id="parcela-fields" class="hidden">
+                        <div class="form-group">
+                            <label for="trans-plots">Quantidade de Parcelas</label>
+                            <input type="number" id="trans-plots" min="2" value="2">
+                        </div>
+                        <div class="form-group toggle-group">
+                            <span class="toggle-label">Tipo de Valor:</span>
+                            <label class="switch">
+                                <input type="checkbox" id="trans-toggle-value">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="toggle-text">Valor da Parcela</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="trans-category">Categoria</label>
+                    <div class="category-select-container">
+                        <select id="trans-category"></select>
+                        <button type="button" id="btn-add-category" title="Adicionar categoria">+</button>
+                        <button type="button" id="btn-remove-category" title="Excluir categoria selecionada" class="btn-minus-category">-</button>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label><input type="checkbox" id="trans-status"> Efetivada / Liquidada</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Salvar</button>
+                    <button type="button" id="btn-delete" class="btn-danger hidden">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOMIZADO: ADICIONAR CATEGORIA -->
+    <div id="category-modal" class="modal hidden">
+        <div class="modal-content modal-sm">
+            <span id="btn-close-category" class="close-modal">&times;</span>
+            <h2>Nova Categoria</h2>
+            <form id="category-form">
+                <div class="form-group">
+                    <label for="new-category-input">Nome da nova categoria:</label>
+                    <input type="text" id="new-category-input" required autocomplete="off">
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" id="btn-cancel-category" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOMIZADO: AVISO (ALERT) -->
+    <div id="custom-alert" class="modal hidden">
+        <div class="modal-content modal-alert-box">
+            <h2>Aviso do Sistema</h2>
+            <p id="custom-alert-text"></p>
+            <button id="btn-close-alert" class="btn-primary full-width">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOMIZADO: CONFIRMAÇÃO SEQUENCIAL (CONFIRM) -->
+    <div id="custom-confirm" class="modal hidden">
+        <div class="modal-content modal-confirm-box">
+            <h2 id="custom-confirm-title">Confirmação</h2>
+            <p id="custom-confirm-text"></p>
+            
+            <!-- Etapa 1: Ações padrão (Sim/Não) -->
+            <div id="confirm-standard-actions" class="dialog-actions">
+                <button id="btn-confirm-no" class="btn-secondary">Não</button>
+                <button id="btn-confirm-yes" class="btn-primary btn-alert-color">Sim</button>
+            </div>
+
+            <!-- Etapa 2: Ações de Exclusão para contas recorrentes -->
+            <div id="confirm-recurrent-actions" class="dialog-actions hidden">
+                <button id="btn-confirm-only-this" class="btn-secondary">Apenas Esta</button>
+                <button id="btn-confirm-all" class="btn-primary btn-alert-color">Todas</button>
+            </div>
+
+            <!-- Etapa 3: Ações de Edição/Alteração Tripla para Contas Fixas -->
+            <div id="confirm-edit-actions" class="dialog-actions-vertical hidden">
+                <button id="btn-edit-only" class="btn-vertical-item">1. Alterar APENAS esta deste mês</button>
+                <button id="btn-edit-future" class="btn-vertical-item btn-vertical-blue">2. Alterar esta e todas as FUTURAS</button>
+                <button id="btn-edit-all" class="btn-vertical-item btn-vertical-dark">3. Alterar TODAS (Passado, Presente e Futuro)</button>
+                <button id="btn-edit-cancel" class="btn-vertical-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
