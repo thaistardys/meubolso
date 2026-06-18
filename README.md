@@ -2,9 +2,7 @@
 
 > Um gerenciador financeiro web focado em simplicidade, usabilidade fluida e estética visual minimalista e acolhedora.
 
-![HTML5](https://shields.io)
-![CSS3](https://shields.io)
-![JavaScript](https://shields.io)
+
 
 ---
 
