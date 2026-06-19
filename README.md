@@ -2,7 +2,9 @@
 
 > Um gerenciador financeiro web focado em simplicidade, usabilidade fluida e estética visual minimalista e acolhedora.
 
+## 🚀 Demonstração
 
+▶️ **[Acesse a aplicação em execução aqui](https://thaistardys.github.io/meubolso/)**
 
 ---
 
